@@ -1,6 +1,6 @@
 # Adequate Sync Proposal
 
-Thanks for reviewing the proposal! I would especially like feedback on questions like:
+Thanks for reviewing [the proposal](PROPOSAL.md)! I would especially like feedback on questions like:
 
 - Are there fundamental problems in this approach that would make it unworkable?
 - Are there problems I've missed that need to be considered?
