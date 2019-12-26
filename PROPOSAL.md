@@ -90,8 +90,10 @@ The following rules govern how clients are intended to interact with Adequate Sy
 	* If the server returns a success HTTP status and an empty array, this means that there were no server operations applied between the last `GET` and when this client's operations were `POST`ed, so the operations can be safely applied to the local data.
 	* If the server returns a success HTTP status and a non-empty array of operations, this means that these operations had been applied to the server between the client's last update from the server and when it `POST`ed new operations.
     The server has already applied the `POST`ed operations, and it returns the preceding operations that the client has not yet seen. Applying these will be addressed below
-	* If the server is not accessible, 
-		* Note about persisting
+	* If the server is not accessible, the operations should be applied locally, then stored in a queue of operations that have been made locally but not sent up to the server.
+* The client should provide a mechanism to retry sending all queued operations to the server.
+* Any time a new operation is sent to the server, the client should also attempt to send any queued operations at the same time.
+* Because Adequate Sync makes changes locally that have not yet been persisted to the server, clients must implement a way to persist all local data between executions of the application. For example, web clients could store the data in browser local storage or IndexedDB, and native mobile applications could store the data using a device storage API.
 
 How should the client handle when a server returns operations that were previously applied to the server that the client doesn't have?
 The client library will call a resolution function specified by the consuming application.
