@@ -123,37 +123,51 @@ So the question is, what can the client do to end up in the same result state CA
 
 A few general possibilities:
 
-* It may be that simply returning CB (the remote operations followed by the new local operations that have not yet been applied) results in the same state as CAB. This is true if and only if C and A can be applied in either order with the same result. For example, if both A and C consist only of create operations, the order they are applied may not matter. Then again, if the user had seen the C operations already applied, she may not have chosen to apply the A operations.
-* It may be that the client can calculate the end state of applying CAB, diff that with the current state of its store, and return new different operations that put the data into the correct state. The standard doesn't require identical operations to be applied on the client as on the server.
-* It may be that there is no way to programmatically determine a good outcome of the conflict. In this case you can have the function return an empty array to apply no operations, and as a side effect present an interface to the user to specify which changes to keep.
+* It may be that simply returning CB (the remote operations followed by the new local operations that have not yet been applied) results in the same state as CAB.
+  This is true if and only if C and A can be applied in either order with the same result.
+  For example, if both A and C consist only of create operations, the order they are applied may not matter.
+  Then again, if the user had seen the C operations already applied, she may not have chosen to apply the A operations.
+* It may be that the client can calculate the end state of applying CAB, diff that with the current state of its store, and return new different operations that put the data into the correct state.
+  The standard doesn't require identical operations to be applied on the client as on the server.
+* It may be that there is no way to programmatically determine a good outcome of the conflict.
+  In this case you can have the function return an empty array to apply no operations, and as a side effect present an interface to the user to specify which changes to keep.
 
-The client library may make resolution functions using different strategies available, but the client library should not choose a resolution strategy by default: this risks corrupting data. Consuming applications should make a conscious choice of what resolution strategy to apply. Failing to specify a resolution strategy should be a client configuration error.
+The client library may make resolution functions using different strategies available, but the client library should not choose a resolution strategy by default: this risks corrupting data.
+Consuming applications should make a conscious choice of what resolution strategy to apply.
+Failing to specify a resolution strategy should be a client configuration error.
 
 (Future versions of the proposal may be able to identify cases that can be automatically handled, but for simplicity this version specifies that all returned records need to be passed to a resolution function.)
 
 ## Reference Implementations
 Preliminary reference implementations have been created:
 
-* Node
-* Client JavaScript
-* React hooks, using Client JavaScript under the hood
+* [Node](https://github.com/CodingItWrong/operative-node)
+* [Client JavaScript](https://github.com/CodingItWrong/operative-client)
+* [React hooks, using Client JavaScript under the hood](https://github.com/CodingItWrong/operative-react)
 
 A sample application can be found here:
 
-* Todo Client
-* Todo Server
+* [Todo Server](https://github.com/CodingItWrong/operative-example-node)
+* [Todo Client - Web](https://github.com/CodingItWrong/operative-example-react)
+* [Todo Client - React Native](https://github.com/CodingItWrong/operative-example-native)
 
 ## Future Concers
-* Handling live updates over abstractions over WebSockets, such as Rails Action Cable and Phoenix Channels
+* Handling live updates over abstractions over WebSockets, such as Rails Action Cable and Phoenix Channels.
 
 ## Concerns Not Addressed
 The following are outside the scope of this standard:
 
-* Authentication
+* Authentication and Authorization
 * Static typing: it may be added to the standard and/or implementations, but it is not a core concern
 
 ## Similar Solutions
-* Google Firebase provides support for live updates, offline data, and sync. It is a proprietary system that doesn't allow you to host your own data. It also doesn't store data relationally.
-* GraphQL provides subscription functionality for live updates, and the popular Apollo Client and Server implement it. But neither the spec nor Apollo's implementations provide support for offline or sync functionality.
-* JSON:API shares Adequate Sync's focus on relational data. Orbit.js is an implementation that allows configuring offline data and queuing up operations to resend later. But since tracking operations isn't part of the JSON:API spec, servers do not have a way to send new operations to clients.
-* Feathers.js simplifies the process of setting up WebSocket-based clients and servers. It does not include support for offline or sync capability.
+* **Google Firebase** provides support for live updates, offline data, and sync.
+  It is a proprietary system that doesn't allow you to host your own data.
+  It also doesn't store data relationally.
+* **GraphQL** provides subscription functionality for live updates, and the popular Apollo Client and Server implement it.
+  But neither the spec nor Apollo's implementations provide support for offline or sync functionality.
+* **JSON:API** shares Adequate Sync's focus on relational data.
+  Orbit.js is an implementation that allows configuring offline data and queuing up operations to resend later.
+  But since tracking operations isn't part of the JSON:API spec, servers do not have a way to send new operations to clients.
+* **Feathers.js** simplifies the process of setting up WebSocket-based clients and servers.
+  It does not include support for offline or sync capability.
