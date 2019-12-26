@@ -89,7 +89,7 @@ The following rules govern how clients are intended to interact with Adequate Sy
 	* If the server returns an error, the server will not have made any changes to the data on the server: the operations must be applied in a single transaction.
 	* If the server returns a success HTTP status and an empty array, this means that there were no server operations applied between the last `GET` and when this client's operations were `POST`ed, so the operations can be safely applied to the local data.
 	* If the server returns a success HTTP status and a non-empty array of operations, this means that these operations had been applied to the server between the client's last update from the server and when it `POST`ed new operations.
-    The server has already applied the POSTed operations, and it returns the preceding operations that the client has not yet seen. Applying these will be addressed below
+    The server has already applied the `POST`ed operations, and it returns the preceding operations that the client has not yet seen. Applying these will be addressed below
 	* If the server is not accessible, 
 		* Note about persisting
 
