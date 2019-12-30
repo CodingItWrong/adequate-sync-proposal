@@ -173,3 +173,7 @@ The following are outside the scope of this standard:
   But since tracking operations isn't part of the JSON:API spec, servers do not have a way to send new operations to clients.
 * **Feathers.js** simplifies the process of setting up WebSocket-based clients and servers.
   It does not include support for offline or sync capability.
+* **CouchDB** is a sync protocol designed to handle offline writes, syncing, and live updates.
+  Client databases exist for JavaScript, iOS, and Android.
+  CouchDB requires using a CouchDB-compliant database on the back end, which is not relational.
+  Because clients connect directly through the database, setting up authentication and business rules works differently than in traditional server-side applications.
