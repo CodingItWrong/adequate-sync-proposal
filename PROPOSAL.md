@@ -50,13 +50,13 @@ Adequate Sync provides two types of data structures:
 	* `attributes` - for all operations except delete, the values to be provided for the record. This version of the proposal doesn't specify whether or not update operations may specify only the changing attributes and omit unchanged ones.
 
 ### Server
-An Adequate Sync server exposes an HTTP endpoint and optionally a corresponding WebService endpoint.
+An Adequate Sync server exposes an HTTP endpoint and optionally a corresponding WebSocket endpoint.
 Data is communicated in JSON format.
 The following subpaths and HTTP methods are available:
 
 HTTP
 * `GET /` - retrieve all records in the data set.
-  Returns an array of records. 
+  Returns an array of records.
 * `GET /operations?since=` - retrieves all operations that the server has received since the `since` query parameter.
   Operations should be applied in the order they are received in the array.
 	* The reference implementation uses local machine timestamps for the `since` parameter, and this works running the client and server on one machine, but will not work as a final solution.
@@ -68,7 +68,7 @@ HTTP
     In other words, you can proactively `GET` the server operations, or you can `POST` an operation in which case you'll receive back any server operations anyway.
 	* Operations must be applied in a transaction: that is, if a server is not able to successfully apply all operations, then it may not make changes from any of the operations.
 
-WebService
+WebSocket
 * Receive: clients will receive messages that contain a JSON-encoded array of operations any time operations are applied to the server.
   This allows live updating of the client and makes conflicting data less likely.
 * Send: clients may send messages containing a JSON-encoded array of operations, equivalent to `POST /operations`.
@@ -84,7 +84,7 @@ The following rules govern how clients are intended to interact with Adequate Sy
 * Initial data should be retrieved by a `GET` to the root (/) of the adequate sync endpoint.
 * At any time after the initial data load, the client can `GET /operations` to retrieve updates to the data from the server.
   The client must apply these operations in the order they are sent in the array.
-* If the server provides a WebService and the client connects to it, then any received arrays of operations should be applied to the local client data in the same way as results from `GET /operations`.
+* If the server provides a WebSocket and the client connects to it, then any received arrays of operations should be applied to the local client data in the same way as results from `GET /operations`.
 * When a change is made to data, the client should first attempt to send the operation to the server before applying it locally.
 	* If the server returns an error, the server will not have made any changes to the data on the server: the operations must be applied in a single transaction.
 	* If the server returns a success HTTP status and an empty array, this means that there were no server operations applied between the last `GET` and when this client's operations were `POST`ed, so the operations can be safely applied to the local data.
